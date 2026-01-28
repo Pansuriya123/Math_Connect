@@ -1,0 +1,136 @@
+.profile-photo-container {
+  position: relative;
+  height: 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.profile-photo-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Size variants */
+.profile-photo-container.small {
+  width: 28px;
+  height: 28px;
+}
+
+.profile-photo-container.medium {
+  width: 48px;
+  height: 48px;
+}
+
+.profile-photo-container.large {
+  width: 80px;
+  height: 80px;
+}
+
+.profile-photo-container.xlarge {
+  width: 120px;
+  height: 120px;
+}
+
+.profile-photo-container.xxlarge {
+  width: 150px;
+  height: 150px;
+}
+
+/* Profile photo image */
+.profile-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Placeholder styles */
+.profile-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.profile-photo-placeholder.visible {
+  display: flex;
+}
+
+.profile-photo-placeholder.hidden {
+  display: none;
+}
+
+/* User icon in placeholder */
+.user-icon {
+  width: 60%;
+  height: 60%;
+  color: white;
+  stroke-width: 2;
+}
+
+/* Profile initials */
+.profile-initials {
+  color: white;
+  font-weight: bold;
+  font-size: 0.6em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Size-specific adjustments for initials */
+.profile-photo-container.small .profile-initials {
+  font-size: 0.5em;
+}
+
+.profile-photo-container.medium .profile-initials {
+  font-size: 0.6em;
+}
+
+.profile-photo-container.large .profile-initials {
+  font-size: 0.8em;
+}
+
+.profile-photo-container.xlarge .profile-initials {
+  font-size: 1em;
+}
+
+.profile-photo-container.xxlarge .profile-initials {
+  font-size: 1.2em;
+}
+
+/* Animation for loading states */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.profile-photo-container.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .profile-photo-container.xxlarge {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .profile-photo-container.xlarge {
+    width: 100px;
+    height: 100px;
+  }
+}
