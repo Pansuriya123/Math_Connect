@@ -102,7 +102,7 @@ const editName = async (req, res, next) => {
       return next(error);
     }
 
-    user.full_name = Name;
+    user.username = Name;
     await user.save();
 
     res.status(200).json({ message: "User name updated successfully!", user });
