@@ -99,18 +99,7 @@ const Profile = () => {
               <span className="info-label">Email:</span>
               <span className="info-value">{user.email}</span>
             </div>
-            <div className="info-item">
-              <span className="info-label">Badge:</span>
-              <span className={`info-value badge ${user.badgeId ? user.badgeId.position.toLowerCase() : ''}`}>
-                {user.badgeId ? (
-                  <>
-                    <span className="badge-symbol">{getBadgeSymbol(user.badgeId.position)}</span> {user.badgeId.position}
-                  </>
-                ) : (
-                  'No badge assigned'
-                )}
-              </span>
-            </div>
+            
           </div>
           <button onClick={() => navigate('/edit-profile')} className="edit-profile-button">
             Edit Profile
