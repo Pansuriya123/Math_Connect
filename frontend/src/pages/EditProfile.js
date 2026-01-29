@@ -28,7 +28,7 @@ const EditProfile = () => {
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
-        setNewName(data.user.full_name);
+        setNewName(data.user.username);
       } else {
         navigate('/login');
       }
@@ -42,6 +42,8 @@ const EditProfile = () => {
 
   const handleNameChange = (e) => {
     setNewName(e.target.value);
+    // console.log("21345",e.target.value);
+    
   };
 
   const handlePasswordChange = (e) => {
@@ -206,9 +208,9 @@ const EditProfile = () => {
       </form>
 
       <form onSubmit={handleNameSubmit} className="edit-profile-form">
-        <h2>Change Full Name</h2>
+        <h2>Change Username</h2>
         <div className="form-group">
-          <label htmlFor="name">Full Name</label>
+          <label htmlFor="name">Username</label>
           <input
             type="text"
             id="name"
