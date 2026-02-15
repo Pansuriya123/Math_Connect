@@ -1,19 +1,19 @@
-const express = require("express");
-const mongoose = require("mongoose");
-require("dotenv").config()
-const userRoutes = require("./routes/users-routes");
-// Auth-only mode: disable non-auth routes
-// const questionRoutes = require('./routes/questions-routes')
-// const answerRoutes = require('./routes/answers-routes')
-// const commentRoutes = require('./routes/comments-routes')
-const HttpError = require("./models/http-error");
-const cors = require('cors');
+import express from "express";
+import mongoose from "mongoose";
+import "dotenv/config";
+import userRoutes from "./routes/users-routes.js";
+import questionRoutes from "./routes/questions-routes.js";
+import answerRoutes from "./routes/answers-routes.js";
+// import commentRoutes from "./routes/comments-routes.js";
+import HttpError from "./models/http-error.js";
+import commentRoutes from "./routes/comments-routes.js";
+import cors from "cors";
 const app = express();
-const cookieParser = require('cookie-parser');
+import cookieParser from "cookie-parser";
 // Auth-only mode: disable realtime/socket features
-// const {Server} = require('socket.io');
-const {createServer} = require('http')
-const bodyParser = require('body-parser');
+// import { Server } from "socket.io";
+import { createServer } from "http";
+import bodyParser from "body-parser";
 
 
 app.use(express.json());
@@ -26,10 +26,9 @@ app.use(cors({
   credentials: true // Allow cookies to be sent
 }));
 app.use("/api/user", userRoutes);
-// Auth-only mode: disable non-auth APIs
-// app.use("/api/question", questionRoutes);
-// app.use("/api/answer/", answerRoutes);
-// app.use("/api/comment/",commentRoutes);
+app.use("/api/question", questionRoutes);
+app.use("/api/answer/", answerRoutes);
+app.use("/api/comment/", commentRoutes);
 
 app.get('/test-cookies', (req, res) => {
   console.log('Cookies:', req.cookies);  // Check if cookies are being parsed
@@ -52,9 +51,7 @@ app.use((error, req, res, next) => {
 app.use(express.json({ limit: '10mb' }));
 //You can replace local server uri with MongoDB Atlas connection link
 mongoose
-  .connect(
-     process.env.MONGO_URI
-  )
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Running at localhost://5000")
     console.log("Mongodb connected successfully")

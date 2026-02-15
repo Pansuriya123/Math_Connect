@@ -4,7 +4,7 @@ import ProfilePhoto from './ProfilePhoto';
 import { baseUrl } from '../Urls';
 import './Navbar.css';
 
-function Navbar({ badgeMessage, onProfileClick, navDisabled = false, enableProfileWhenDisabled = false }) {
+function Navbar({ badgeMessage, onProfileClick, navDisabled = false, enableProfileWhenDisabled = false, enableAskWhenDisabled = false }) {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isUpdated, setIsUpdated] = useState(false);
@@ -73,6 +73,7 @@ function Navbar({ badgeMessage, onProfileClick, navDisabled = false, enableProfi
   }
 
   const isProfileDisabled = navDisabled && !enableProfileWhenDisabled;
+  const isAskDisabled = navDisabled && !enableAskWhenDisabled;
 
   return (
     <nav className="navbar">
@@ -80,7 +81,7 @@ function Navbar({ badgeMessage, onProfileClick, navDisabled = false, enableProfi
         <div className="navbar-content">
           <div className="navbar-left">
             <span className="navbar-logo">∑</span>
-            <span className="navbar-title">MathConnect</span>
+            <span className="navbar-title">MathCraft</span>
           </div>
           <div className="navbar-right">
             <button
@@ -115,10 +116,10 @@ function Navbar({ badgeMessage, onProfileClick, navDisabled = false, enableProfi
               <span className="nav-label">Chat</span>
             </button>
             <button
-              onClick={navDisabled ? undefined : () => navigate('/questions')}
-              className={`nav-button ${navDisabled ? 'nav-button--disabled' : ''}`}
+              onClick={isAskDisabled ? undefined : () => navigate('/questions')}
+              className={`nav-button ${isAskDisabled ? 'nav-button--disabled' : ''}`}
               aria-label="Ask"
-              disabled={navDisabled}
+              disabled={isAskDisabled}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="icon">
   <circle cx="12" cy="12" r="10" />

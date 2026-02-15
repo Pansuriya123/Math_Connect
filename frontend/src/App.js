@@ -11,6 +11,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import MathTools from "./pages/MathTools";
 import Chats from "./components/Chats";
 import Questions from "./pages/Questions";
+import Answer from "./pages/Answer";
 
 function App() {
 
@@ -20,7 +21,7 @@ function App() {
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>MathConnect</title>
+        <title>MathCraft</title>
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
       
@@ -39,6 +40,7 @@ function App() {
             <Route path="/math-tools" element={<MathTools/>}/>
             <Route path="/chats" element={<Chats/>}/>
             <Route path="/questions" element={<Questions/>}/>
+            <Route path="/answer/:questionId" element={<Answer/>}/>
           </Route>
 
           {/* Redirect everything else to login */}

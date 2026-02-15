@@ -1,27 +1,20 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
 
-const HttpError = require("../models/http-error");
-const User = require("../models/user");
+import HttpError from "../models/http-error.js";
+import User from "../models/user.js";
 
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 
-const multer = require('multer');
-const path = require('path');
+import multer from 'multer';
+import path from 'path';
 
-
-const storage = multer.memoryStorage(); 
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-
 const JWT_SECRET = process.env.JWT_SECRET;
-
-
-const express = require('express');
-const app = express();
-app.use(cookieParser());
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -102,7 +95,7 @@ const editName = async (req, res, next) => {
       return next(error);
     }
 
-    user.username = Name;
+    user.full_name = Name;
     await user.save();
 
     res.status(200).json({ message: "User name updated successfully!", user });
@@ -334,7 +327,7 @@ const editPhoto = async (req, res) => {
 };
 
 
-exports.editPhoto = editPhoto
+// exports removed in ESM; use named export at bottom
 const removePhoto = async (req, res) => {
   const userId = req.params.userId;
   try {
@@ -352,14 +345,17 @@ const removePhoto = async (req, res) => {
     return res.status(500).json({ message: 'Server error while removing profile photo.' });
   }
 };
-exports.getCurrentUser = getCurrentUser;
-exports.getUsers = getUsers;
-exports.login = login;
-exports.logout = logout;
-exports.editName = editName;
-exports.isAuth = isAuth;
-exports.updatePassword = updatePassword;
-exports.sendOtpEmail = sendOtpEmail;
-exports.resetPassword = resetPassword;
-exports.verifyOtp = verifyOtp;
-exports.removePhoto = removePhoto;
+export {
+  getCurrentUser,
+  getUsers,
+  login,
+  logout,
+  editName,
+  isAuth,
+  updatePassword,
+  sendOtpEmail,
+  resetPassword,
+  verifyOtp,
+  editPhoto,
+  removePhoto
+};

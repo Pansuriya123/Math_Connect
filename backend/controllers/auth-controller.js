@@ -1,4 +1,5 @@
-const User = require("../models/user");
+// import User from "../models/user.js";
+import User from '../models/user.js'
 
 const basicAuthMiddleware = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -33,4 +34,4 @@ const basicAuthMiddleware = async (req, res, next) => {
     }
   };
   
-  exports.basicAuthMiddleware = basicAuthMiddleware
+export { basicAuthMiddleware };

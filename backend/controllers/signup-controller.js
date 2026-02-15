@@ -1,11 +1,11 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const HttpError = require('../models/http-error');
-const User = require('../models/user');
-const { validationResult } = require('express-validator');
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import HttpError from '../models/http-error.js';
+import User from '../models/user.js';
+import { validationResult } from 'express-validator';
 
 // Signup function
-const signup = async (req, res, next) => {
+export const signup = async (req, res, next) => {
   // Handle validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -72,5 +72,3 @@ const signup = async (req, res, next) => {
     email: createdUser.email,
   });
 };
-
-module.exports = { signup };

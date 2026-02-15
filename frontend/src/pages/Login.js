@@ -97,7 +97,7 @@ const Login = () => {
               );
       toast.success('Login successful!');
       // Auth-only mode: send user to home where only navbar is shown
-      navigate('/', { replace: true });
+      navigate('/questions', { replace: true });
     } catch (error) {
       console.error(error);
       toast.error('Login failed. Please try again.');
