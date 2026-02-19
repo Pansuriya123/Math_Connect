@@ -81,7 +81,7 @@ function Navbar({ badgeMessage, onProfileClick, navDisabled = false, enableProfi
         <div className="navbar-content">
           <div className="navbar-left">
             <span className="navbar-logo">∑</span>
-            <span className="navbar-title">MathCraft</span>
+            <span className="navbar-title">MathConnect</span>
           </div>
           <div className="navbar-right">
             <button

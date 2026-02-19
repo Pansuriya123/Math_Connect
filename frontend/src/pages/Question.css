@@ -1,0 +1,320 @@
+/* Global styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f7f9;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .question-page {
+    padding-top: 60px;
+  }
+  
+  .math-community {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f7f9;
+  }
+  
+  .math-loading {
+    font-size: 3rem;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .math-loading span {
+    display: inline-block;
+    animation: bounce 0.6s infinite alternate;
+  }
+  
+  .math-loading span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .math-loading span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-20px); }
+  }
+  
+  .page-title {
+    text-align: center;
+    color: #2c3e50;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .question-form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+    transition: transform 0.3s ease;
+  }
+  
+  .question-form:hover {
+    transform: translateY(-5px);
+  }
+  
+  .question-input, .answer-input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .question-input:focus, .answer-input:focus {
+    border-color: #3498db;
+  }
+  
+  .submit-button {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+  }
+  
+  .submit-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+  }
+  
+  .error-message {
+    color: #e74c3c;
+    background-color: #fdecea;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  .success-message {
+    color: #27ae60;
+    background-color: #eafaf1;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  .search-bar {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .search-input {
+    width: 75%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .search-input:focus {
+    border-color: #888;
+  }
+  
+  .content-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 30px;
+    margin-top: 30px;
+  }
+  
+  .sidebar {
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  .category-button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    background-color: #ecf0f1;
+    color: #2c3e50;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .category-button:hover {
+    background-color: #d0d7de;
+  }
+  
+  .category-button.active {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .main-content {
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  .main-content h2 {
+    margin-top: 0;
+    color: #2c3e50;
+    font-size: 1.8em;
+    margin-bottom: 25px;
+  }
+  
+  .questions-list {
+    display: grid;
+    gap: 25px;
+  }
+  
+  .question-card {
+    background-color: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-left: 5px solid #3498db;
+  }
+  
+  .question-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  }
+  
+  .question-card h3 {
+    margin-top: 0;
+    color: #2c3e50;
+    font-size: 1.4em;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+  
+  .question-card p {
+    margin: 8px 0;
+    color: #34495e;
+    font-size: 0.95em;
+    margin-bottom: 10px;
+  }
+  
+  .question-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .answers-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+    border: none;
+    cursor: pointer;
+  }
+  
+  .answers-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(52, 152, 219, 0.3);
+  }
+  
+  .view-answer-button {
+    padding: 10px 20px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .view-answer-button:hover {
+    background-color: #27ae60;
+    transform: translateY(-2px);
+  }
+  
+  .remove-button {
+    padding: 10px 20px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .remove-button:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+  }
+  
+  .answer-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .answer-modal {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+  
+  .answer-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .answer-modal-content {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .close-modal {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
