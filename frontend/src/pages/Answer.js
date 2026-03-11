@@ -244,6 +244,12 @@ const Answer = () => {
           )}
         </div>
 
+        <div className="practice-canvas-section">
+          <h2>Practice Canvas</h2>
+          <p>You can practice and sketch your solution steps here.</p>
+          <button className="submit-button" onClick={() => navigate(`/practice/${questionId}`)}>Open Practice Canvas</button>
+        </div>
+
         <div className="answer-form">
           <h2>Your Answer</h2>
           <form onSubmit={handleSubmit}>

@@ -4,7 +4,7 @@ import ProfilePhoto from './ProfilePhoto';
 import { baseUrl } from '../Urls';
 import './Navbar.css';
 
-function Navbar({ badgeMessage, onProfileClick, navDisabled = false, enableProfileWhenDisabled = false, enableAskWhenDisabled = false }) {
+function Navbar({ badgeMessage, onProfileClick, navDisabled = false, enableProfileWhenDisabled = false, enableAskWhenDisabled = false, enableChatWhenDisabled = false }) {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isUpdated, setIsUpdated] = useState(false);
@@ -74,6 +74,7 @@ function Navbar({ badgeMessage, onProfileClick, navDisabled = false, enableProfi
 
   const isProfileDisabled = navDisabled && !enableProfileWhenDisabled;
   const isAskDisabled = navDisabled && !enableAskWhenDisabled;
+  const isChatDisabled = navDisabled && !enableChatWhenDisabled;
 
   return (
     <nav className="navbar">
@@ -81,7 +82,7 @@ function Navbar({ badgeMessage, onProfileClick, navDisabled = false, enableProfi
         <div className="navbar-content">
           <div className="navbar-left">
             <span className="navbar-logo">∑</span>
-            <span className="navbar-title">MathConnect</span>
+            <span className="navbar-title">MathCraft</span>
           </div>
           <div className="navbar-right">
             <button
@@ -105,10 +106,10 @@ function Navbar({ badgeMessage, onProfileClick, navDisabled = false, enableProfi
             </button>
 
             <button
-              onClick={navDisabled ? undefined : () => navigate('/chats')}
-              className={`nav-button ${navDisabled ? 'nav-button--disabled' : ''}`}
+              onClick={isChatDisabled ? undefined : () => navigate('/chats')}
+              className={`nav-button ${isChatDisabled ? 'nav-button--disabled' : ''}`}
               aria-label="Chat"
-              disabled={navDisabled}
+              disabled={isChatDisabled}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="icon">
                 <path d="M13 10V3L4 14h7v7l9-11h-7z" />

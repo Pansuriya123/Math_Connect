@@ -207,6 +207,16 @@ const updatePassword = async (req, res, next) => {
 const sendOtpEmail = async (req, res) => {
   const { email } = req.body;
   try {
+    const smtpHost = process.env.SMTP_HOST;
+    const smtpPort = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT, 10) : undefined;
+    const smtpSecure = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : undefined;
+    const allowInsecureTls = process.env.SMTP_ALLOW_INSECURE_TLS === 'true';
+    const smtpUser = process.env.SMTP_USER || process.env.EMAIL_USER;
+    const smtpPass = process.env.SMTP_PASS || process.env.EMAIL_PASSWORD;
+
+    if (!smtpUser || !smtpPass) {
+      return res.status(500).json({ message: 'Email service not configured. Set SMTP_USER/SMTP_PASS or EMAIL_USER/EMAIL_PASSWORD.' });
+    }
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: 'User with this email does not exist.' });
@@ -220,16 +230,56 @@ const sendOtpEmail = async (req, res) => {
     const otpToken = jwt.sign({ otp: otp.toString(), otpExpires, email }, process.env.JWT_SECRET, { expiresIn: '10m' });
 
     // Send OTP via email
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
+    const candidates = [];
+    if (smtpHost) {
+      candidates.push({
+        host: smtpHost,
+        port: smtpPort || 587,
+        secure: typeof smtpSecure === 'boolean' ? smtpSecure : false,
+        auth: { user: smtpUser, pass: smtpPass },
+        tls: allowInsecureTls ? { rejectUnauthorized: false } : undefined,
+      });
+    } else {
+      candidates.push({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: { user: smtpUser, pass: smtpPass },
+        tls: allowInsecureTls ? { rejectUnauthorized: false } : undefined,
+      });
+      candidates.push({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: { user: smtpUser, pass: smtpPass },
+        tls: allowInsecureTls ? { rejectUnauthorized: false } : undefined,
+      });
+      candidates.push({
+        service: 'gmail',
+        auth: { user: smtpUser, pass: smtpPass },
+        tls: allowInsecureTls ? { rejectUnauthorized: false } : undefined,
+      });
+    }
+
+    let transporter;
+    let verified = false;
+    let lastError;
+    for (const cfg of candidates) {
+      try {
+        transporter = nodemailer.createTransport(cfg);
+        await transporter.verify();
+        verified = true;
+        break;
+      } catch (e) {
+        lastError = e;
+      }
+    }
+    if (!verified) {
+      return res.status(500).json({ message: 'Email transport verification failed', error: lastError ? lastError.message : 'Unknown error' });
+    }
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: smtpUser,
       to: email,
       subject: 'Password Reset OTP',
       text: `Your password reset OTP is: ${otp}. It will expire in 10 minutes.`,
@@ -237,14 +287,12 @@ const sendOtpEmail = async (req, res) => {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        return res.status(500).json({ message: 'Failed to send OTP email.', error });
+        return res.status(500).json({ message: 'Failed to send OTP email.', error: error.message || String(error) });
       }
-
-      // Send the OTP token to the client (do not send the actual OTP)
       res.status(200).json({ message: 'OTP sent to your email.', otpToken });
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
+    res.status(500).json({ message: 'Server error.', error: error.message || String(error) });
   }
 };
 

@@ -247,11 +247,11 @@ export default function Questions() {
             <h2>{selectedGroup ? `${selectedGroup} Questions` : 'All Questions'}</h2>
             {isLoading ? (
               <div className="loading-spinner">Loading...</div>
-            ) : filteredQuestions.length === 0 ? (
+            ) : questions.length === 0 ? (
               <p>No questions found</p>
             ) : (
               <div className="questions-list">
-                {filteredQuestions.map((question) => (
+                {questions.map((question) => (
                   <div key={question._id} className="question-card">
                     <h3>{question.question}</h3>
                     <p>Category: {question.category}</p>

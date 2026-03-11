@@ -12,6 +12,9 @@ import MathTools from "./pages/MathTools";
 import Chats from "./components/Chats";
 import Questions from "./pages/Questions";
 import Answer from "./pages/Answer";
+import CanvasPage from "./pages/CanvasPage";
+import PracticeCanvasPage from "./pages/PracticeCanvasPage";
+import ForgetPassword from "./pages/ForgetPassword";
 
 function App() {
 
@@ -39,12 +42,15 @@ function App() {
             <Route path="/edit-profile" element={<EditProfile />} />
             <Route path="/math-tools" element={<MathTools/>}/>
             <Route path="/chats" element={<Chats/>}/>
+            <Route path="/canvas" element={<CanvasPage/>}/>
             <Route path="/questions" element={<Questions/>}/>
             <Route path="/answer/:questionId" element={<Answer/>}/>
+            <Route path="/practice/:questionId" element={<PracticeCanvasPage/>}/>
           </Route>
 
           {/* Redirect everything else to login */}
           <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
         </Routes>
       </Router>
       </ToastProvider>
