@@ -119,15 +119,29 @@ export default function Questions() {
     try {
       let category = 'General';
       const questionLower = newQuestion.toLowerCase();
-      if (questionLower.includes('triangle') || questionLower.includes('circle') || questionLower.includes('angle')) {
+      if (questionLower.includes('log') || questionLower.includes('ln')) {
+        category = 'Logarithms';
+      } else if (questionLower.includes('triangle') || questionLower.includes('circle') || questionLower.includes('angle') || questionLower.includes('area') || questionLower.includes('perimeter')) {
         category = 'Geometry';
-      } else if (questionLower.includes('probability')) {
+      } else if (questionLower.includes('statistics') || questionLower.includes('mean') || questionLower.includes('median') || questionLower.includes('mode')) {
+        category = 'Statistics';
+      } else if (questionLower.includes('probability') || questionLower.includes('chance') || questionLower.includes('random')) {
         category = 'Probability';
-      } else if (questionLower.includes('derivative') || questionLower.includes('integral') || questionLower.includes('limit')) {
+      } else if (questionLower.includes('polynomial') || questionLower.includes('quadratic') || questionLower.includes('equation')) {
+        category = 'Polynomials';
+      } else if (questionLower.includes('derivative') || questionLower.includes('integral') || questionLower.includes('limit') || questionLower.includes('calculus')) {
         category = 'Calculus';
-      } else if (questionLower.includes('sin') || questionLower.includes('cos') || questionLower.includes('tan')) {
+      } else if (questionLower.includes('sin') || questionLower.includes('cos') || questionLower.includes('tan') || questionLower.includes('trigonometry')) {
         category = 'Trigonometry';
+      } else if (questionLower.includes('complex') || questionLower.includes('imaginary') || questionLower.includes('i=')) {
+        category = 'Complex Number';
+      } else if (questionLower.includes('function') || questionLower.includes('relation') || questionLower.includes('domain') || questionLower.includes('range')) {
+        category = 'Relation & Functions';
+      } else if (questionLower.includes('matrix') || questionLower.includes('determinant') || questionLower.includes('vector')) {
+        category = 'Matrix';
       }
+      
+      console.log(`Question categorized as: ${category}`);
       const response = await fetch(`${baseUrl}/api/question/${currentUser.username}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -247,11 +261,11 @@ export default function Questions() {
             <h2>{selectedGroup ? `${selectedGroup} Questions` : 'All Questions'}</h2>
             {isLoading ? (
               <div className="loading-spinner">Loading...</div>
-            ) : questions.length === 0 ? (
+            ) : filteredQuestions.length === 0 ? (
               <p>No questions found</p>
             ) : (
               <div className="questions-list">
-                {questions.map((question) => (
+                {filteredQuestions.map((question) => (
                   <div key={question._id} className="question-card">
                     <h3>{question.question}</h3>
                     <p>Category: {question.category}</p>
