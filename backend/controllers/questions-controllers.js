@@ -45,7 +45,7 @@ const getUserQuestions = async (req, res, next) => {
 };
 
 const createUserQuestion = async (req, res, next) => {
-  const { question, category, answer } = req.body;
+  const { question, category, answer, image } = req.body;
   const username = req.params.username;
 
   if (category === "Error") {
@@ -66,12 +66,17 @@ const createUserQuestion = async (req, res, next) => {
     question,
     category,
     answer: answer || null,
+    image: image || null, // Store the base64 or URL
     createdAt: new Date(),
     updatedAt: new Date(),
   });
 
   try {
     await createdQuestion.save();
+    // Award XP for asking a question
+    user.xp += 10;
+    user.level = Math.floor(user.xp / 100) + 1;
+    await user.save();
   } catch (err) {
     const error = new HttpError("Creating question failed, please try again.", 500);
     return next(error);
