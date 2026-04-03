@@ -11,6 +11,8 @@ const userSchema = new Schema({
     // Auth-only mode: badge is optional
     badgeId: { type: mongoose.Types.ObjectId, required: false, ref: 'Badge'},
     profile_photo: { type: String },
+    xp: { type: Number, default: 0 },
+    level: { type: Number, default: 1 },
 })
 
 userSchema.plugin(uniqueValidator);
