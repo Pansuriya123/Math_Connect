@@ -4,6 +4,8 @@ import "dotenv/config";
 import userRoutes from "./routes/users-routes.js";
 import questionRoutes from "./routes/questions-routes.js";
 import answerRoutes from "./routes/answers-routes.js";
+import aiRoutes from "./routes/ai-routes.js";
+import notificationRoutes from "./routes/notifications-routes.js";
 import HttpError from "./models/http-error.js";
 import commentRoutes from "./routes/comments-routes.js";
 import cors from "cors";
@@ -13,22 +15,7 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import bodyParser from "body-parser";
 
-
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json()); 
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(cors({
-  origin: ['http://localhost:3000', 'https://math-craft-ruddy.vercel.app'], // Allow both localhost and production
-  credentials: true // Allow cookies to be sent
-}));
-app.use("/api/user", userRoutes);
-app.use("/api/question", questionRoutes);
-app.use("/api/answer/", answerRoutes);
-app.use("/api/comment/", commentRoutes);
-
-// Initialize HTTP server and Socket.IO before starting to listen
+// Initialize HTTP server and Socket.IO
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
@@ -37,14 +24,57 @@ const io = new Server(server, {
   },
 });
 
+app.use(express.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json()); 
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://math-craft-ruddy.vercel.app'], // Allow both localhost and production
+  credentials: true // Allow cookies to be sent
+}));
+
+// Attach Socket.io instance to request
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
+app.use("/api/user", userRoutes);
+app.use("/api/question", questionRoutes);
+app.use("/api/answer/", answerRoutes);
+app.use("/api/comment/", commentRoutes);
+app.use("/api/ai/", aiRoutes);
+app.use("/api/notifications/", notificationRoutes);
+
 // Realtime chat users map
 const users = {};
+// User ID to Socket ID map for targeted notifications
+const userSocketMap = {};
 
 io.on("connection", (socket) => {
   // Event to handle user connection and storing the user data
   socket.on("user-connected", (user) => {
-    users[socket.id] = { username: user.username, badgeId: user.badgeId };
+    users[socket.id] = { username: user.username, badgeId: user.badgeId, userId: user._id };
+    if (user._id) {
+      userSocketMap[user._id] = socket.id;
+    }
     io.emit("update-user-status", Object.values(users));
+  });
+
+  // When a user disconnects, remove them from the maps
+  socket.on("disconnect", () => {
+    const user = users[socket.id];
+    if (user && user.userId) {
+      delete userSocketMap[user.userId];
+    }
+    delete users[socket.id];
+    io.emit("update-user-status", Object.values(users));
+  });
+
+  // Handle joining specific user room for notifications
+  socket.on("join-notifications", (userId) => {
+    socket.join(`notifications-${userId}`);
   });
 
   // Event for sending messages to a specific room
@@ -60,12 +90,6 @@ io.on("connection", (socket) => {
 
   socket.on("room-created", (msg) => {
     io.emit("room-created", msg);
-  });
-
-  // When a user disconnects, remove them from the users object
-  socket.on("disconnect", () => {
-    delete users[socket.id];
-    io.emit("update-user-status", Object.values(users));
   });
 });
 
@@ -87,7 +111,6 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "An unknown error occurred!" });
 });
 
-app.use(express.json({ limit: '10mb' }));
 //You can replace local server uri with MongoDB Atlas connection link
 mongoose
   .connect(process.env.MONGO_URI)

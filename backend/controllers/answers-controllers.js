@@ -1,6 +1,8 @@
 import HttpError from "../models/http-error.js";
 import Answer from "../models/answer.js";
 import Question from "../models/question.js";
+import User from "../models/user.js";
+import Notification from "../models/notification.js";
 
 import mongoose from 'mongoose';
 
@@ -93,6 +95,37 @@ const createAnswer = async (req, res, next) => {
     await newAnswer.save();
     question.answerCount = (question.answerCount || 0) + 1;
     await question.save();
+
+    // Award XP for answering a question
+    const user = await User.findById(userId);
+    if (user) {
+      user.xp += 20;
+      user.level = Math.floor(user.xp / 100) + 1;
+      await user.save();
+    }
+
+    // Create a real-time notification for the question owner
+    if (question.userId.toString() !== userId.toString()) {
+      const notification = new Notification({
+        recipient: question.userId,
+        sender: userId,
+        type: 'answer',
+        questionId: question._id,
+        answerId: newAnswer._id,
+        content: `replied to your question: "${question.question.substring(0, 30)}..."`
+      });
+      await notification.save();
+      
+      // Emit real-time notification
+      req.io.to(`notifications-${question.userId}`).emit('new-notification', {
+        id: notification._id,
+        type: 'answer',
+        content: notification.content,
+        senderName: user ? user.username : 'Someone',
+        createdAt: notification.createdAt
+      });
+    }
+
     return res.status(201).json({ message: "Answer created", answerId: newAnswer._id });
   } catch (err) {
     return next(new HttpError("Failed to create answer", 500));
