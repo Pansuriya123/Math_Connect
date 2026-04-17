@@ -11,6 +11,7 @@ const upload = multer({
 });
 
 router.get('/', userController.getUsers);
+router.get('/leaderboard', userController.getLeaderboard);
 
 router.post(
   '/signup',

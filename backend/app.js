@@ -8,6 +8,7 @@ import aiRoutes from "./routes/ai-routes.js";
 import notificationRoutes from "./routes/notifications-routes.js";
 import HttpError from "./models/http-error.js";
 import commentRoutes from "./routes/comments-routes.js";
+import Message from "./models/message.js";
 import cors from "cors";
 const app = express();
 import cookieParser from "cookie-parser";
@@ -78,8 +79,19 @@ io.on("connection", (socket) => {
   });
 
   // Event for sending messages to a specific room
-  socket.on("message", ({ message, room, username, socketId }) => {
-    io.to(room).emit("receive-message", { message, username, socketId });
+  socket.on("message", async ({ message, room, username, socketId }) => {
+    try {
+      const newMessage = new Message({
+        room,
+        username,
+        message,
+        socketId
+      });
+      await newMessage.save();
+      io.to(room).emit("receive-message", { message, username, socketId });
+    } catch (err) {
+      console.error("Error saving message:", err);
+    }
   });
 
   // Event to join a room
@@ -91,6 +103,17 @@ io.on("connection", (socket) => {
   socket.on("room-created", (msg) => {
     io.emit("room-created", msg);
   });
+});
+
+app.get('/api/chat/history/:room', async (req, res, next) => {
+  const room = req.params.room;
+  try {
+    const messages = await Message.find({ room }).sort({ createdAt: 1 }).limit(50);
+    res.json({ messages });
+  } catch (err) {
+    const error = new HttpError("Fetching chat history failed.", 500);
+    return next(error);
+  }
 });
 
 app.get('/test-cookies', (req, res) => {

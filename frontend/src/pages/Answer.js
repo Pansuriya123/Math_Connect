@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import MathRenderer from '../components/MathRenderer';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './Answer.css';
@@ -14,6 +15,8 @@ const Answer = () => {
   const [newComment, setNewComment] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [isAiLoading, setIsAiLoading] = useState(false);
+  const [aiSolution, setAiSolution] = useState('');
   const { questionId } = useParams();
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
@@ -22,6 +25,36 @@ const Answer = () => {
     fetchQuestionAndAnswers();
     fetchCurrentUser();
   }, [questionId]);
+
+  const handleAiSolve = async () => {
+    if (!question) return;
+    setIsAiLoading(true);
+    setAiSolution('');
+    try {
+      const response = await fetch(`${baseUrl}/api/ai/solve`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: question.title,
+          category: question.category,
+          image: question.image // Send the question's image if it exists
+        }),
+        credentials: 'include',
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setAiSolution(data.solution);
+      } else {
+        throw new Error(data.message || 'AI solve failed');
+      }
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
 
   const fetchCurrentUser = async () => {
     try {
@@ -181,7 +214,25 @@ const Answer = () => {
     <div className="answer-page">
       <Navbar />
       <div className="container">
-        <h1 className="question-title">{question ? question.title : 'Question not found'}</h1>
+        <h1 className="question-title">{question ? <MathRenderer text={question.title} /> : 'Question not found'}</h1>
+        
+        <div className="ai-tutor-section">
+          <button 
+            className={`ai-solve-button ${isAiLoading ? 'loading' : ''}`}
+            onClick={handleAiSolve}
+            disabled={isAiLoading}
+          >
+            {isAiLoading ? 'AI is thinking...' : '✨ Ask AI Tutor for Step-by-Step Solution'}
+          </button>
+          {aiSolution && (
+            <div className="ai-solution-card">
+              <h3>AI Tutor Solution</h3>
+              <div className="ai-solution-content">
+                <MathRenderer text={aiSolution} />
+              </div>
+            </div>
+          )}
+        </div>
 
         <div className="answers-list">
           <h2>Answers</h2>
@@ -221,7 +272,7 @@ const Answer = () => {
                             Posted on: {comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : 'Date not available'}
                           </p>
                         </div>
-                        <p className="comment-content">{comment.content}</p>
+                        <p className="comment-content"><MathRenderer text={comment.content} /></p>
                       </div>
                     ))
                   ) : (

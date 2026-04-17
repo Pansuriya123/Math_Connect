@@ -112,6 +112,14 @@
 
 .nav-button:hover .icon {
   transform: scale(1.1);
+  color: #3b82f6;
+}
+
+.navbar-divider {
+  width: 1px;
+  height: 24px;
+  background-color: #e5e7eb;
+  margin: 0 8px;
 }
 
 .nav-label {

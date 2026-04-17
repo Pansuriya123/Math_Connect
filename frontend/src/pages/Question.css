@@ -99,6 +99,77 @@ body {
   .submit-button:hover {
     background-color: #2980b9;
     transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+  }
+
+  .file-upload {
+    margin: 10px 0;
+  }
+
+  .file-label {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #f0f4f8;
+    color: #34495e;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px dashed #cbd5e1;
+    transition: all 0.3s ease;
+    font-weight: 500;
+  }
+
+  .file-label:hover {
+    background-color: #e2e8f0;
+    border-color: #3498db;
+  }
+
+  .file-label input[type="file"] {
+    display: none;
+  }
+
+  .image-preview {
+    position: relative;
+    display: inline-block;
+    margin: 10px 0;
+    max-width: 200px;
+  }
+
+  .image-preview img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  .image-preview button {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .question-image-container {
+    margin: 15px 0;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .question-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
   }
   
   .error-message {

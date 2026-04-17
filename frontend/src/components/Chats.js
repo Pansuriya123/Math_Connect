@@ -16,7 +16,21 @@ function Chats() {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    socket.on("connect", () => {});
+    fetchCurrentUser();
+    const savedRoom = localStorage.getItem("currentRoom");
+    if (savedRoom) {
+      setRoom(savedRoom);
+      fetchChatHistory(savedRoom);
+    }
+
+    socket.on("connect", () => {
+      if (savedRoom) {
+        socket.emit("join-room", {
+          room: savedRoom,
+          username: localStorage.getItem("chatUsername") || "User",
+        });
+      }
+    });
 
     socket.on("receive-message", (data) => {
       setChats((prevChats) => [...prevChats, data]);
@@ -30,7 +44,6 @@ function Chats() {
       setRoomMessages((prevMessages) => [...prevMessages, data]);
     });
 
-    fetchCurrentUser();
     return () => {
       socket.disconnect();
     };
@@ -38,12 +51,20 @@ function Chats() {
 
   useEffect(() => {
     if (currentUser && currentUser.username) {
+      localStorage.setItem("chatUsername", currentUser.username);
       socket.emit("user-connected", {
         username: currentUser.username,
         badgeId: currentUser.badgeId,
       });
+      // Re-join if room was already set from localStorage
+      if (room) {
+        socket.emit("join-room", {
+          room: room,
+          username: currentUser.username,
+        });
+      }
     }
-  }, [currentUser, socket]);
+  }, [currentUser, socket, room]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -71,16 +92,38 @@ function Chats() {
     }
   };
 
+  const fetchChatHistory = async (roomName) => {
+    try {
+      const response = await fetch(`${baseUrl}/api/chat/history/${roomName}`, {
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (data.messages) {
+        setChats(data.messages);
+      }
+    } catch (err) {
+      console.error("Failed to load chat history:", err);
+    }
+  };
+
   const handleRoomSubmit = (e) => {
     e.preventDefault();
     if (roomName.trim()) {
+      localStorage.setItem("currentRoom", roomName);
       socket.emit("join-room", {
         room: roomName,
         username: currentUser.username,
       });
       setRoom(roomName);
+      fetchChatHistory(roomName);
       setRoomName("");
     }
+  };
+
+  const leaveRoom = () => {
+    localStorage.removeItem("currentRoom");
+    setRoom("");
+    setChats([]);
   };
 
   const insertMathSymbol = (symbol) => {
@@ -92,7 +135,7 @@ function Chats() {
       <Navbar />
       <div className="math-chat">
       <header className="chat-header">
-        <h1>Instant MathChat</h1>
+        <h1>Instant MathChat {room && <span className="current-room-title">| Room: {room} <button className="leave-room-btn" onClick={leaveRoom}>Leave</button></span>}</h1>
       </header>
 
       <div className="chat-container">
@@ -171,10 +214,15 @@ function Chats() {
                 <div
                   key={index}
                   className={`message ${
-                    chat.socketId === socket.id ? "sent" : "received"
+                    chat.username === currentUser?.username ? "sent" : "received"
                   }`}
                 >
-                  <span className="username">{chat.username}</span>
+                  <div className="message-header">
+                    <span className="username">{chat.username}</span>
+                    <span className="timestamp">
+                      {chat.createdAt ? new Date(chat.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                    </span>
+                  </div>
                   <p>{chat.message}</p>
                 </div>
               ))

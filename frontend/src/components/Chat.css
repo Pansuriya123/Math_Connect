@@ -28,6 +28,31 @@ body {
   font-size: 24px;
   font-weight: 600;
   animation: slideIn 0.5s ease-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.current-room-title {
+  font-size: 0.7em;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.leave-room-btn {
+  background-color: #e74c3c !important;
+  font-size: 0.8em !important;
+  padding: 2px 8px !important;
+  margin: 0 !important;
+}
+
+.leave-room-btn:hover {
+  background-color: #c0392b !important;
 }
 
 .chat-container {
@@ -88,12 +113,23 @@ body {
 .username {
   font-size: 0.8em;
   color: #64748b;
-  margin-bottom: 4px;
-  display: block;
   font-weight: 600;
 }
 
-.message.sent .username {
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+
+.timestamp {
+  font-size: 0.7em;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+
+.message.sent .username, .message.sent .timestamp {
   color: #e2e8f0;
 }
 

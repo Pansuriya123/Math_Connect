@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import MathRenderer from '../components/MathRenderer';
 import './Question.css';
 import { baseUrl } from '../Urls';
 import { useToast } from '../components/ToastProvider';
@@ -18,6 +19,8 @@ export default function Questions() {
   const [message, setMessage] = useState('');
   const [isAddingQuestion, setIsAddingQuestion] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [badgeMessage, setBadgeMessage] = useState(() => {
     return localStorage.getItem('badgeMessage') || 'No changes';
   });
@@ -103,6 +106,22 @@ export default function Questions() {
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image size should be less than 5MB');
+        return;
+      }
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!currentUser) {
@@ -148,7 +167,8 @@ export default function Questions() {
         body: JSON.stringify({ 
           question: newQuestion,
           category,
-          answer: newAnswer.trim() || null
+          answer: newAnswer.trim() || null,
+          image: imagePreview // Send the base64 string
         }),
         credentials: 'include'
       });
@@ -157,6 +177,8 @@ export default function Questions() {
       }
       setNewQuestion('');
       setNewAnswer('');
+      setSelectedImage(null);
+      setImagePreview(null);
       fetchQuestions();
       setMessage(`Your question has been added to ${category}`);
       toast.success('Question added!');
@@ -203,6 +225,23 @@ export default function Questions() {
               required
               className="question-input"
             />
+            <div className="file-upload">
+              <label htmlFor="question-image" className="file-label">
+                <span>📷 Upload Math Photo (Optional)</span>
+                <input
+                  id="question-image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </label>
+            </div>
+            {imagePreview && (
+              <div className="image-preview">
+                <img src={imagePreview} alt="Question preview" />
+                <button type="button" onClick={() => { setSelectedImage(null); setImagePreview(null); }}>&times;</button>
+              </div>
+            )}
             <textarea
               value={newAnswer}
               onChange={(e) => setNewAnswer(e.target.value)}
@@ -267,7 +306,12 @@ export default function Questions() {
               <div className="questions-list">
                 {filteredQuestions.map((question) => (
                   <div key={question._id} className="question-card">
-                    <h3>{question.question}</h3>
+                    <h3><MathRenderer text={question.question} /></h3>
+                    {question.image && (
+                      <div className="question-image-container">
+                        <img src={question.image} alt="Question" className="question-image" />
+                      </div>
+                    )}
                     <p>Category: {question.category}</p>
                     <p>Posted by: {question.userId}</p>
                     <p>Date: {new Date(question.createdAt).toLocaleDateString()}</p>

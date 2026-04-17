@@ -104,8 +104,21 @@
   }
   
   .info-value {
-    color: #34495e;
-    font-size: 1.1rem;
+    color: #2c3e50;
+    font-weight: 500;
+  }
+  
+  .info-value.level-badge {
+    background-color: #e0f2fe;
+    color: #0369a1;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-weight: 600;
+  }
+  
+  .info-value.xp-value {
+    color: #2563eb;
+    font-weight: 700;
   }
   
   .badge {

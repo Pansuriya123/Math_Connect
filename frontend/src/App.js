@@ -15,6 +15,7 @@ import Answer from "./pages/Answer";
 import CanvasPage from "./pages/CanvasPage";
 import PracticeCanvasPage from "./pages/PracticeCanvasPage";
 import ForgetPassword from "./pages/ForgetPassword";
+import Leaderboard from "./pages/Leaderboard";
 
 function App() {
 
@@ -24,7 +25,7 @@ function App() {
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>MathCraft</title>
+        <title>MathConnect</title>
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
       
@@ -44,6 +45,7 @@ function App() {
             <Route path="/chats" element={<Chats/>}/>
             <Route path="/canvas" element={<CanvasPage/>}/>
             <Route path="/questions" element={<Questions/>}/>
+            <Route path="/leaderboard" element={<Leaderboard/>}/>
             <Route path="/answer/:questionId" element={<Answer/>}/>
             <Route path="/practice/:questionId" element={<PracticeCanvasPage/>}/>
           </Route>

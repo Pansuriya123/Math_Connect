@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ProfilePhoto from './ProfilePhoto';
+import NotificationCenter from './NotificationCenter';
 import { baseUrl } from '../Urls';
 import './Navbar.css';
 
@@ -82,7 +83,7 @@ function Navbar({ badgeMessage, onProfileClick, navDisabled = false, enableProfi
         <div className="navbar-content">
           <div className="navbar-left">
             <span className="navbar-logo">∑</span>
-            <span className="navbar-title">MathCraft</span>
+            <span className="navbar-title">MathConnect</span>
           </div>
           <div className="navbar-right">
             <button
@@ -129,6 +130,27 @@ function Navbar({ badgeMessage, onProfileClick, navDisabled = false, enableProfi
 </svg>
               <span className="nav-label">Ask</span>
             </button>
+            <button
+              onClick={navDisabled ? undefined : () => navigate('/leaderboard')}
+              className={`nav-button ${navDisabled ? 'nav-button--disabled' : ''}`}
+              aria-label="Leaderboard"
+              disabled={navDisabled}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon">
+                <path d="M6 9H4.5a1.5 1.5 0 0 0-1.5 1.5v3A1.5 1.5 0 0 0 4.5 15H6" />
+                <path d="M18 9h1.5a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5H18" />
+                <path d="M4 22h16" />
+                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+              </svg>
+              <span className="nav-label">Ranks</span>
+            </button>
+
+            <div className="navbar-divider"></div>
+            
+            <NotificationCenter currentUser={user} />
+
             <button
               onClick={isProfileDisabled ? undefined : handleProfileClick}
               className={`nav-button ${isProfileDisabled ? 'nav-button--disabled' : ''}`}

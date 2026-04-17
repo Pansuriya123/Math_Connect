@@ -100,6 +100,14 @@ const Profile = () => {
               <span className="info-value">{user.email}</span>
             </div>
             <div className="info-item">
+              <span className="info-label">Level:</span>
+              <span className="info-value level-badge">Lvl {user.level || 1}</span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">XP:</span>
+              <span className="info-value xp-value">{user.xp || 0} XP</span>
+            </div>
+            <div className="info-item">
               <span className="info-label">Badge:</span>
               <span className={`info-value badge ${user.badgeId ? user.badgeId.position.toLowerCase() : ''}`}>
                 {user.badgeId ? (

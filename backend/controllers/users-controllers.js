@@ -31,6 +31,25 @@ const getUsers = async (req, res, next) => {
   res.json({ users: users.map((user) => user.toObject({ getters: true })) });
 };
 
+const getLeaderboard = async (req, res, next) => {
+  let users;
+  try {
+    users = await User.find({}, "username full_name xp level profile_photo")
+      .sort({ xp: -1 })
+      .limit(10);
+  } catch (err) {
+    const error = new HttpError(
+      "Fetching leaderboard failed, please try again later.",
+      500
+    );
+    return next(error);
+  }
+
+  res.json({
+    leaderboard: users.map((user) => user.toObject({ getters: true })),
+  });
+};
+
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   const trimmedPassword = password.trim();
@@ -396,6 +415,7 @@ const removePhoto = async (req, res) => {
 export {
   getCurrentUser,
   getUsers,
+  getLeaderboard,
   login,
   logout,
   editName,

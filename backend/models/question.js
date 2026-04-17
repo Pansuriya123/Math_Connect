@@ -8,6 +8,7 @@ const questionSchema = new Schema({
     question: { type: String, required: true },
     category: {type:String,required:true},
     answer: { type: String },
+    image: { type: String }, // Store base64 or Cloudinary URL
     createdAt: { type: Date },
     updatedAt: { type: Date },
     answerCount: {type:Number,default:0}
